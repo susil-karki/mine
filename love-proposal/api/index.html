@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For Sulochana 💖</title>
+  <style>
+    body {
+      background: #ffe6f2;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: #d6336c;
+      text-align: center;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 5px #ff66b2;
+    }
+    #buttons {
+      margin-top: 20px;
+    }
+    button {
+      background: #ff66b2;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 1.2rem;
+      padding: 12px 30px;
+      margin: 0 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px #ff66b2aa;
+      transition: transform 0.3s ease, background 0.3s ease;
+      position: relative;
+    }
+    button:hover {
+      background: #e65590;
+      transform: scale(1.1);
+    }
+    #no {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #message {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      min-height: 2em;
+    }
+    #credit {
+      position: fixed;
+      bottom: 5px;
+      right: 10px;
+      font-size: 0.8rem;
+      color: #a63358;
+      opacity: 0.6;
+      font-style: italic;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hey Sulochana 💖</h1>
+  <p>Will you be my girlfriend?</p>
+
+  <div id="buttons">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+  </div>
+
+  <div id="message"></div>
+
+  <div id="credit">Made with love by Susil ❤️</div>
+
+  <script>
+    const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
+    const message = document.getElementById("message");
+    let noClicks = 0;
+
+    function sendClick(choice) {
+      fetch('/api/click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ choice, timestamp: new Date().toISOString() })
+      }).catch(console.error);
+    }
+
+    yesBtn.onclick = () => {
+      sendClick("yes");
+      message.textContent = "Yay! Since you're my girlfriend, here’s a 🌹 just for you!";
+      noBtn.style.display = 'none';
+      yesBtn.disabled = true;
+    };
+
+    noBtn.onclick = () => {
+      sendClick("no");
+      noClicks++;
+      if (noClicks < 3) {
+        message.textContent = "Please say yes, Sulochana! ❤️";
+        moveNoButton();
+      } else if (noClicks < 5) {
+        message.textContent = "I know you want to say yes! 😊";
+        moveNoButton(true);
+      } else {
+        message.textContent = "Alright, you win! But you can't click 'No' anymore 😉";
+        noBtn.disabled = true;
+      }
+    };
+
+    function moveNoButton(fast = false) {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+      noBtn.style.transition = fast ? 'all 0.1s ease' : 'all 0.5s ease';
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
+    }
+
+    // Initially position No button centered
+    noBtn.style.left = '60%';
+    noBtn.style.top = '50%';
+  </script>
+</body>
+</html>
